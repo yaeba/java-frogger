@@ -36,7 +36,7 @@ public class Vehicle extends MovingObject {
 	 */
 	public static Vehicle createBus(float x, float y, boolean moveRight) {
 		return new Vehicle(BUS_PATH, x, y, BUS_SPEED, moveRight, 
-						new String[] {LETHAL});
+						new String[] {LETHAL, FLIPPABLE});
 	}
 	
 	/** Static method to create a racecar.
@@ -47,7 +47,7 @@ public class Vehicle extends MovingObject {
 	 */
 	public static Vehicle createRacecar(float x, float y, boolean moveRight) {
 		return new Vehicle(RACECAR_PATH, x, y, RACECAR_SPEED, moveRight, 
-						new String[] {LETHAL});
+						new String[] {LETHAL, FLIPPABLE});
 	}
 	
 	/** Static method to create a bike.
@@ -58,7 +58,7 @@ public class Vehicle extends MovingObject {
 	 */
 	public static Vehicle createBike(float x, float y, boolean moveRight) {
 		return new Vehicle(BIKE_PATH, x, y, BIKE_SPEED, moveRight, 
-						new String[] {LETHAL, REVERSIBLE});
+						new String[] {LETHAL, REVERSIBLE, FLIPPABLE});
 	}
 	
 	/** Static method to create a bulldozer.
@@ -70,7 +70,7 @@ public class Vehicle extends MovingObject {
 	public static Vehicle createBulldozer(float x, float y,
 			boolean moveRight) {
 		return new Vehicle(BULLDOZER_PATH, x, y, BULLDOZER_SPEED, moveRight, 
-						new String[] {SOLID});
+						new String[] {SOLID, FLIPPABLE});
 	}
 	
 	
@@ -105,6 +105,8 @@ public class Vehicle extends MovingObject {
 				reverseDir();
 			}
 		}
+		
+		// continue moving as usual
 		super.update(gc, delta);
 		
 	}

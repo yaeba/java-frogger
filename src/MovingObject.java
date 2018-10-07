@@ -4,6 +4,7 @@
  */
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 
@@ -62,6 +63,24 @@ public abstract class MovingObject extends Sprite {
 		}
 	
 		setMove(toX, getY());
+	}
+	
+	
+	/** Render the sprite from top left corner.
+     * @param g The Slick graphics object, used for drawing.
+     */
+	@Override
+	public void render(Graphics g) throws SlickException {
+		if (!isMovingRight() && hasTag(FLIPPABLE)) {
+			
+			// render horizontally flipped image
+
+			g.drawImage(getImage().getFlippedCopy(true, false), 
+						getX()-getWidth()/2, getY()-getHeight()/2);
+		
+		} else {
+			super.render(g);
+		}
 	}
 	
 	

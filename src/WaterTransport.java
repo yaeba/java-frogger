@@ -71,7 +71,7 @@ public class WaterTransport extends MovingObject {
 	public static WaterTransport createTurtle(float x, float y,
 			boolean moveRight) {
 		return new WaterTransport(TURTLE_PATH, x, y, TURTLE_SPEED, moveRight,
-					new String[] {FLOATING, DIVEABLE});
+					new String[] {FLOATING, DIVEABLE, FLIPPABLE});
 	}
 	
 	

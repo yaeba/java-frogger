@@ -10,7 +10,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Graphics;
 import java.util.ArrayList;
 
-
 /**
  * Normal Game State for the game (Proj 2).
  * Reads level information from csv, handles initialisation, 
@@ -25,7 +24,6 @@ public class NormalGameState extends State {
 	public static final float PLAYER_Y = 720;
 	/** number of levels in this game state */
 	public static final int MAX_LEVELS = 2;
-	
 	
 	/** The game world */
 	private World world;

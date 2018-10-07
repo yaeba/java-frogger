@@ -19,10 +19,6 @@ import java.util.ArrayList;
  * mechanisms and rules.
  */
 public class World {
-	/** player starting x position */
-	public static final float PLAYER_X = 512;
-	/** player starting y position */
-	public static final float PLAYER_Y = 720;
 	/** x position of lives image */
 	public static final float LIVES_X = 24;
 	/** y position of lives image */

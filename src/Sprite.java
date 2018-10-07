@@ -7,6 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import utilities.BoundingBox;
@@ -21,13 +22,14 @@ public abstract class Sprite {
 	public static final String LETHAL = "lethal";
 	/** tag indicating sprite is solid */
 	public static final String SOLID = "solid";
-	/** tag indicationg sprite is floating */
+	/** tag indicating sprite is floating */
 	public static final String FLOATING = "floating";
-	/** tag indicationg sprite can reverse direction */
+	/** tag indicating sprite can reverse direction */
 	public static final String REVERSIBLE = "reversible";
-	/** tag indicationg sprite can dive */
+	/** tag indicating sprite can dive */
 	public static final String DIVEABLE = "diveable";
-	
+	/** tag indicating (some) sprites must be flipped horizontally */
+	public static final String FLIPPABLE = "flippable";
 	
 	/** image of sprite */
 	private Image image;
@@ -73,7 +75,7 @@ public abstract class Sprite {
      * @param g The Slick graphics object, used for drawing.
      */
 	public void render(Graphics g) throws SlickException {
-			g.drawImage(image, x-image.getWidth()/2, y-image.getHeight()/2);
+		g.drawImage(image, x-image.getWidth()/2, y-image.getHeight()/2);
 	}
 		
 	
@@ -101,6 +103,13 @@ public abstract class Sprite {
 		return this.y;
 	}
 
+	/** Getter for image of sprite.
+	 * @return Image image.
+	 */
+	public Image getImage() {
+		return this.image;
+	}
+	
 	/** Getter for image width of sprite.
 	 * @return float Image width.
 	 */

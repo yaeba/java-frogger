@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class RandomLane {
 	public enum Obstacle {
-		BUS, BULLDOZER, BIKE, RACECAR, LOG, TURTLE;
+		BUS, BULLDOZER, BIKE, RACECAR, LOG, LONGLOG, TURTLE;
 		
 		private static final Obstacle[] VALUES = values();
 		private static final Random RANDOM = new Random();
@@ -23,13 +23,16 @@ public class RandomLane {
 				return Vehicle.createRacecar(x, y, moveRight);
 			} else if (LOG.equals(this)) {
 				return WaterTransport.createLog(x, y, moveRight);
+			} else if (LONGLOG.equals(this)) {
+				return WaterTransport.createLonglog(x, y, moveRight);
 			} else {
 				return WaterTransport.createTurtle(x, y, moveRight);
 			}
 		}
 		
 		public boolean onWater() {
-			if (LOG.equals(this) || TURTLE.equals(this)) {
+			if (LOG.equals(this) || LONGLOG.equals(this) || 
+					TURTLE.equals(this)) {
 				return true;
 			}
 			return false;

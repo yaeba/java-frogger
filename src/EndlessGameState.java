@@ -51,8 +51,8 @@ public class EndlessGameState extends State {
 		// check if level complete or game over
         if (world.isLevelCompleted()) {
         	this.level++;
+        	System.out.println(level);
         	this.goal = Goal.createGoal(GOAL_X, GOAL_Y);
-        	this.world = null;
     		this.world = createRandomWorld();
         } else if (world.isGameOver()) {
         	enterState(sbg, GameOverState.ID, 0);
@@ -112,7 +112,7 @@ public class EndlessGameState extends State {
 			
 		}
 		RandomLane randomLane;
-		if (level < RandomLane.OBSTACLES) {
+		if (level < 4) {
 			randomLane = new RandomLane(level, y);
 		} else {
 			randomLane = new RandomLane(y);
