@@ -52,8 +52,7 @@ public class Goal extends Sprite {
 	 */
 	public void fillGoal(Player player) {
 		filled = true;
-		player.dies();
-		player.addLives();
+		player.respawn();
 	}
 	
 	/** Return status of goal.

@@ -93,17 +93,23 @@ public class Player extends Sprite {
 		return this.lives;
 	}
 	
-	/** Method to add 1 live to player. */
-	public void addLives() {
-		this.lives++;
+	/** Setter for number lives
+	 * @param lives Lives for player/
+	 */
+	public void setLives(int lives) {
+		this.lives = lives;
 	}
 	
 	/** Method to kill player and reset to starting position. */
-	public void dies() {
-		setMove(respawnX, respawnY);
+	public void die() {
+		respawn();
 		this.lives--;
 	}
 	
+	/** Method to set player at respawn position */
+	public void respawn() {
+		setMove(respawnX, respawnY);
+	}
 	
 	/** Handles collision of player with different sprites.
 	 * @param other Another sprite in contact with player.
@@ -181,7 +187,7 @@ public class Player extends Sprite {
 	/** Collides with lethal sprite */
 	private void onCollisionLethal() {
 		if (!hasTag(FLOATING)) {
-			dies();
+			die();
 		}
 	}
 	
@@ -197,7 +203,7 @@ public class Player extends Sprite {
 			sep = solid.isMovingRight() ? sep : -1 * sep;
 			setMove(solid.getX()+sep, getY());
 			if (!onScreen()) {
-				dies();
+				die();
 			}
 		}
 	}
@@ -215,7 +221,7 @@ public class Player extends Sprite {
 		Goal goal = (Goal) other;
 		if (goal.isFilled()) {
 			// already filled
-			dies();
+			die();
 		} else {
 			goal.fillGoal(this);
 		}

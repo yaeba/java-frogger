@@ -27,18 +27,12 @@ public class World {
 	public static final float LIVES_SEP = 32;
 	/** path to lives images */
 	public static final String LIVES_PATH = "assets/lives.png";
-	/** lower bound seconds extralife appears */
-	public static final int EXTRALIFE_MIN = 25;
-	/** upper bound seconds extralife appears */
-	public static final int EXTRALIFE_MAX = 35;
 	
 	
 	/** Array list containing all sprites */
 	private ArrayList<Sprite> sprites;
 	/** The player */
 	private Player player;
-	/** Extra life object */
-	private ExtraLife extraLife = null;
 	/** Lives image */
 	private Image lives = new Image("assets/lives.png");
 	/** Array of goals */
@@ -47,12 +41,8 @@ public class World {
 	private boolean levelCompleted = false;
 	/** Game status */
 	private boolean gameOver = false;
-	/** Time in world */
-	private float timePassed = 0;
 	/** Presence of extra life in world */
 	private boolean setExtraLife = false;
-	/** Time extra life appears */
-	private int extraLifeStart;
 	
 	
 	/** Constructor.
@@ -67,9 +57,8 @@ public class World {
 		this.player = player;
 		this.sprites = sprites;
 		this.goals = goals;
+
 		
-		int bound = EXTRALIFE_MAX - EXTRALIFE_MIN + 1;
-		this.extraLifeStart = new Random().nextInt(bound) + EXTRALIFE_MIN;
 	}
 	
 	
@@ -80,12 +69,9 @@ public class World {
 	public void update(GameContainer gc, int delta) 
 		throws SlickException {
 		
-		// update time passed
-		timePassed += delta * App.MILLISECOND;
 		
-
-		// handle extra life
 		if (setExtraLife) {
+			// handle the removal of extra life
 			checkExtraLife();
 		}
 		
@@ -176,7 +162,7 @@ public class World {
 	}
 	
 	/** Create extra life and add to array list of sprites */
-	private void createExtraLife() {
+	public void createExtraLife() {
 		ArrayList<WaterTransport> list = new ArrayList<>();
 		for (Sprite sprite : this.sprites) {
 			if (sprite.hasTag(Sprite.FLOATING) &&
@@ -189,21 +175,15 @@ public class World {
 		int randint = new Random().nextInt(list.size());
 		WaterTransport randomLog = list.get(randint);
 		
-		this.extraLife = ExtraLife.createExtraLife(randomLog.getX(), 
+		ExtraLife extraLife = ExtraLife.createExtraLife(randomLog.getX(), 
 									randomLog.getY(), randomLog);
-		sprites.add(this.extraLife);
+		sprites.add(extraLife);
 	}
 	
-	/** Handles creation and destruction of extra life*/
+	/** Handles destruction of extra life*/
 	private void checkExtraLife() {
-		// check if needs to create extra life
-		if (extraLife == null && timePassed >= extraLifeStart) {
-			createExtraLife();
-		}
-		// or need to destroy it
-		if (extraLife != null && extraLife.isDestroyed()) {
-			this.sprites.remove(extraLife);
-		}
+		// check if need to destroy any extra life
+		sprites.removeIf(s -> (s instanceof ExtraLife && ((ExtraLife)s).isDestroyed()));
 	}
 	
 	/** Check if all goals have been filled */
@@ -244,6 +224,7 @@ public class World {
 	private void renderLives(Graphics g) {
 		for (int i=0; i<player.getLives(); i++) {
 			float lives_x = LIVES_X + i * LIVES_SEP;
+			
 			float lives_y = LIVES_Y;
 			g.drawImage(lives, lives_x-lives.getWidth()/2, 
 						lives_y-lives.getHeight()/2);

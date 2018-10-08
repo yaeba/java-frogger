@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.Graphics;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Normal Game State for the game (Proj 2).
@@ -24,6 +25,10 @@ public class NormalGameState extends State {
 	public static final float PLAYER_Y = 720;
 	/** number of levels in this game state */
 	public static final int MAX_LEVELS = 2;
+	/** lower bound seconds extralife appears */
+	public static final int EXTRALIFE_MIN = 25;
+	/** upper bound seconds extralife appears */
+	public static final int EXTRALIFE_MAX = 35;
 	
 	/** The game world */
 	private World world;
@@ -33,6 +38,11 @@ public class NormalGameState extends State {
 	
 	/** Current level */
 	private int level = 0;
+	
+	private float timePassed = 0;
+	
+	private float extraLifeStart;
+	private boolean setExtraLife = false;
 
 	
 	
@@ -61,6 +71,11 @@ public class NormalGameState extends State {
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) 
 			throws SlickException {
 		
+		timePassed += delta * App.MILLISECOND;
+		if (timePassed > extraLifeStart && !setExtraLife) {
+			world.createExtraLife();
+			setExtraLife = true;
+		}
 		// update the world
         world.update(gc, delta);
         
@@ -113,10 +128,7 @@ public class NormalGameState extends State {
 	 * @param lives Remaining lives of player.
 	 */
 	public void setPlayerLives(int lives) {
-		if (player.getLives() > lives) {
-			player.dies();
-			setPlayerLives(lives);
-		}
+		player.setLives(lives);
 	}
 	
 	/** create a World that contains player, sprites and goals of current
@@ -128,6 +140,12 @@ public class NormalGameState extends State {
 			ArrayList<Sprite> sprites = readCsv(Integer.toString(level));
 			Goal[] goals = findGoals(sprites);
 			
+			int bound = EXTRALIFE_MAX - EXTRALIFE_MIN + 1;
+			this.extraLifeStart = new Random().nextInt(bound) + EXTRALIFE_MIN;
+			World world = new World(this.player, sprites, goals);
+			world.setExtraLife(true);
+			setExtraLife = false;
+			timePassed = 0;
 			return new World(this.player, sprites, goals);
 		} catch (SlickException e) {
 			e.printStackTrace();

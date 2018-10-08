@@ -10,7 +10,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class EndlessGameState extends State {
 	/** The ID given to this state */
@@ -30,7 +29,6 @@ public class EndlessGameState extends State {
 	private Player player;
 	private Goal goal;
 	private int level = 0;
-	private float checkpointProb = 0.2f;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) 
@@ -78,10 +76,7 @@ public class EndlessGameState extends State {
 	}
 	
 	public void setPlayerLives(int lives) {
-		if (player.getLives() > lives) {
-			player.dies();
-			setPlayerLives(lives);
-		}
+		player.setLives(lives);
 	}
 	
 	private World createRandomWorld() {
@@ -105,12 +100,6 @@ public class EndlessGameState extends State {
 	}
 	
 	private ArrayList<Sprite> createRandomLane(float y) {
-		float prob = new Random().nextFloat();
-		
-		if (prob < checkpointProb) {
-			// create lane of checkpoint
-			
-		}
 		RandomLane randomLane;
 		if (level < 4) {
 			randomLane = new RandomLane(level, y);
@@ -119,4 +108,5 @@ public class EndlessGameState extends State {
 		}
 		return randomLane.getSprites();
 	}
+	
 }

@@ -31,7 +31,7 @@ public class ExtraLife extends Sprite {
 	private boolean stepRight = true;
 	
 	/** Variable to record separation from log */
-	private float sep = 0;
+	private float sep;
 	
 	/** Status */
 	private boolean destroyed = false;
@@ -47,6 +47,7 @@ public class ExtraLife extends Sprite {
 			WaterTransport log) {
 		return new ExtraLife(EXTRALIFE_PATH, x, y, log);
 	}
+	
 	
 	/** Constructor.
 	 * @param imgPath Image path.
@@ -71,31 +72,14 @@ public class ExtraLife extends Sprite {
 		
 		timeLastMoved += delta * App.MILLISECOND;
 		timeCreated += delta * App.MILLISECOND;
+
 		
-		// move together with log
-		setMove(onLog.getX() + this.sep, getY());
-		
-		// check if it needs to move by itself or be destroyed
+		// check if it needs be destroyed
 		if (timeCreated >= DESTROY_TIME) {
 			destroy();
-		} else if (timeLastMoved >= MOVE_PERIOD) {
-			// move by itself
-			float x = getX();
-			float step = stepRight ? getWidth() : -1 * getWidth();
-			float toX = x + step;
-			
-			float logStart = onLog.getX() - onLog.getWidth()/2;
-			float logEnd = onLog.getX() + onLog.getWidth()/2;
-			if (toX < logStart || toX > logEnd) {
-				// reached end, move in opposite direction instead
-				toX = x - step;
-				stepRight = !stepRight;
-			}
-			setMove(toX, getY());
-			timeLastMoved = 0;
 		}
-		this.sep = getX() - onLog.getX();
-		super.update(gc, delta);
+		
+		move();
 	}
 	
 	
@@ -103,7 +87,7 @@ public class ExtraLife extends Sprite {
 	 * @param player Player of interest.
 	 */
 	public void activateEffect(Player player) {
-		player.addLives();
+		player.setLives(player.getLives()+1);
 		destroy();
 	}
 
@@ -117,5 +101,29 @@ public class ExtraLife extends Sprite {
 	/** Set status to destroyed */
 	private void destroy() {
 		this.destroyed = true;
+	}
+	
+	private void move() {
+		// move together with log
+		setMove(onLog.getX() + this.sep, getY());
+		
+		if (timeLastMoved >= MOVE_PERIOD) {
+			// move by itself
+			timeLastMoved = 0;
+			float x = getX();
+			float step = stepRight ? getWidth() : -1 * getWidth();
+			float toX = x + step;
+			
+			float logStart = onLog.getX() - onLog.getWidth()/2;
+			float logEnd = onLog.getX() + onLog.getWidth()/2;
+			if (toX < logStart || toX > logEnd) {
+				// reached end, move in opposite direction instead
+				toX = x - step;
+				stepRight = !stepRight;
+			}
+			setMove(toX, getY());
+		}
+
+		this.sep = getX() - onLog.getX();
 	}
 }
