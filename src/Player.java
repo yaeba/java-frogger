@@ -8,16 +8,20 @@ import org.newdawn.slick.Input;
 
 
 /**
- * Represent a player (frog) that inherits from Sprite. Handles inputs and
- * update position of player.
+ * Singleton class, represent a player (frog) that inherits from Sprite. 
+ * Handles inputs and update position of player.
  */
 public class Player extends Sprite {
 	/** image path of player (frog) */
-	private static final String PLAYER_PATH = "assets/frog.png";
+	public static final String PLAYER_PATH = "assets/frog.png";
 	/** player's default respawn x position */
 	public static final float RESPAWN_X = 512;
 	/** player's default respawn y position */
 	public static final float RESPAWN_Y = 720;
+	
+	
+	/** static variable single instance of Player */
+	private static Player player = null;
 	
 	/** lives player has */
 	private int lives;
@@ -39,9 +43,16 @@ public class Player extends Sprite {
 	 * @return Player Player created.
 	 */
 	public static Player createPlayer(float x, float y, int lives) {
-		return new Player(PLAYER_PATH, x, y, lives);
+		if (player == null) {
+			player = new Player(PLAYER_PATH, x, y, lives);
+		}
+		return player;
 	}
 	
+	
+	public static Player getPlayer() {
+		return player;
+	}
 	
 	/** Constructor.
 	 * @param imgPath Path to sprite's image.
@@ -49,7 +60,7 @@ public class Player extends Sprite {
 	 * @param y Starting y position of sprite.
 	 * @param lives Number of lives player has.
 	 */
-	public Player(String imgPath, float x, float y, int lives) {
+	private Player(String imgPath, float x, float y, int lives) {
 		super(imgPath, x, y);
 		this.lives = lives;
 		this.prevX = x;
@@ -71,8 +82,7 @@ public class Player extends Sprite {
 		}
 		
 		// receive inputs and move player
-		Input input = gc.getInput();
-		moveByInput(input);
+		moveByInput(gc.getInput());
 	}
 	
 	

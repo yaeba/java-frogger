@@ -10,7 +10,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.*;
 
 import java.awt.Font;
 import java.io.BufferedReader;
@@ -56,21 +58,34 @@ public abstract class State extends BasicGameState {
 	}
 	
 	
-	public void enterState(StateBasedGame sbg, int nextStateID, int lives) {
-		sbg.enterState(nextStateID);
-		State nextState = (State) sbg.getState(nextStateID);
-		nextState.setPlayerLives(lives);
-		nextState.setTime(time);
+	public void enterNormal(GameContainer gc, StateBasedGame sbg) {
+		enterState(gc, sbg, new NormalGameState());
+	}
+	
+	public void enterEndless(GameContainer gc, StateBasedGame sbg) {
+		enterState(gc, sbg, new EndlessGameState());
+	}
+	
+	public void enterGameOver(GameContainer gc, StateBasedGame sbg) {
+		enterState(gc, sbg, new GameOverState());
+	}
+	
+	private void enterState(GameContainer gc, StateBasedGame sbg, GameState nextState) {
+		sbg.addState(nextState);
+		try {
+			nextState.init(gc, sbg);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		};
+		sbg.enterState(nextState.getID(), new EmptyTransition(), new VerticalSplitTransition());
+		((State)nextState).time = this.time;
 	}
 	
 	public void setPlayerLives(int lives) {
 		// meant to be overriden
 		return;
 	}
-	
-	public void setTime(float time) {
-		this.time = time;
-	}
+
 	
 	public float getTime() {
 		return time;

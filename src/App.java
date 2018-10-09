@@ -48,9 +48,6 @@ public class App extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer gc) throws SlickException {
 		addState(new MenuState());
-		addState(new NormalGameState());
-		addState(new EndlessGameState());
-		addState(new GameOverState());
 	}
 
 }

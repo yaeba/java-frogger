@@ -54,11 +54,11 @@ public class NormalGameState extends State {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		// create player and world
-		
-		this.player = Player.createPlayer(PLAYER_X, PLAYER_Y, App.PLAYER_LIVES);
+		player = Player.getPlayer();
+		player.setMove(PLAYER_X, PLAYER_Y);
 		player.setRespawnPosition(PLAYER_X, PLAYER_Y);
-		this.world = createLevel();
-		this.world.setExtraLife(true);
+		world = createLevel();
+		world.setExtraLife(true);
 	}
 
 	
@@ -84,7 +84,7 @@ public class NormalGameState extends State {
         if (world.isLevelCompleted()) {
         	this.level++;
         	if (this.level == MAX_LEVELS) {
-        		enterState(sbg, EndlessGameState.ID, player.getLives());
+        		enterEndless(gc, sbg);;
         	}
         	else {
         		// create a World of new level
@@ -92,7 +92,7 @@ public class NormalGameState extends State {
         		this.world.setExtraLife(true);
         	}
         } else if (world.isGameOver()) {
-        	enterState(sbg, GameOverState.ID, 0);
+        	enterGameOver(gc, sbg);
         }
         
         // update the time

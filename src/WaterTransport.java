@@ -99,15 +99,7 @@ public class WaterTransport extends MovingObject {
 		// add on to how sprite moves
 		
 		if (hasTag(DIVEABLE)) {
-			// sprite can dive (turtle)
-			timeLastDived += delta * App.MILLISECOND;
-			
-			if ((isDiving && timeLastDived >= DIVE_FOR) ||
-					(!isDiving && timeLastDived >= DIVE_PERIOD)) {
-				isDiving = !isDiving;
-				updateFloatingTag();
-				timeLastDived = 0;
-			}
+			handleDiving(delta);
 		}
 		
 		super.update(gc, delta);
@@ -125,6 +117,19 @@ public class WaterTransport extends MovingObject {
 			super.render(g);
 		}
 	}
+	
+	
+	private void handleDiving(int delta) {
+		timeLastDived += delta * App.MILLISECOND;
+		
+		if ((isDiving && timeLastDived >= DIVE_FOR) ||
+				(!isDiving && timeLastDived >= DIVE_PERIOD)) {
+			isDiving = !isDiving;
+			updateFloatingTag();
+			timeLastDived = 0;
+		}
+	}
+	
 	
 	/** Method that alternate diving state of sprite. */
 	private void updateFloatingTag() {

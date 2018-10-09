@@ -1,0 +1,8 @@
+Frog:		Jakenbear 	https://opengameart.org/content/pixel-frog
+Tiles: 		Xarius 		https://opengameart.org/content/pixel-tileset
+Vehicles:	Master484	https://opengameart.org/content/basic-2d-car-collection
+Log:		Kenney.nl	https://opengameart.org/content/platformer-art-pixel-redux
+GameOver:				https://www.beyondtrust.com/wp-content/uploads/blog-game-over.png
+SadFrog1:				https://ih0.redbubble.net/image.379051756.5442/pp,550x550.jpg
+SadFrog2:				https://i.kym-cdn.com/photos/images/original/000/883/622/d2e.png
+BoilingFrog:			https://glennlimthots.files.wordpress.com/2015/11/zzbbxxz.jpg

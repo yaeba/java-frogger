@@ -98,16 +98,20 @@ public class Vehicle extends MovingObject {
 		
 		if (hasTag(REVERSIBLE)) {
 			// reverse direction if necessary
-		
-			float width = getWidth(), x = getX();
-			if ((!isMovingRight()  && x < width/2)
-					|| (isMovingRight() && x > App.SCREEN_WIDTH - width/2)) {
-				reverseDir();
-			}
+			handleReverse();
 		}
 		
 		// continue moving as usual
 		super.update(gc, delta);
 		
+	}
+	
+	private void handleReverse() {
+		// method that handles reversible moving object
+		float width = getWidth(), x = getX();
+		if ((!isMovingRight()  && x < width/2)
+				|| (isMovingRight() && x > App.SCREEN_WIDTH - width/2)) {
+			reverseDir();
+		}
 	}
 }

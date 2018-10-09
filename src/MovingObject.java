@@ -43,26 +43,7 @@ public abstract class MovingObject extends Sprite {
 	public void update(GameContainer gc, int delta) 
 			throws SlickException {
 		// update an obstacle's position
-		float toX = getX();
-		
-		// moving left
-		if (!this.moveRight) {
-			toX -= delta * speed;
-			// respawn from right end if half of it went past window
-			if (toX + getWidth()/2 <= 0) {
-				toX = App.SCREEN_WIDTH + getWidth()/2;
-			}
-		}
-		// moving right
-		else {
-			toX += delta * speed;
-			// respawn from left end if half of it went past window
-			if (toX - getWidth()/2 >= App.SCREEN_WIDTH) {
-				toX = -(super.getWidth()/2);
-			}
-		}
-	
-		setMove(toX, getY());
+		move(delta);
 	}
 	
 	
@@ -103,5 +84,30 @@ public abstract class MovingObject extends Sprite {
 	/** Reverse the direction of sprite. */
 	public void reverseDir() {
 		this.moveRight = !this.moveRight;
+	}
+	
+	
+	private void move(int delta) {
+		// method that moves any moving object and respawn from either sides
+		float toX = getX();
+		
+		// moving left
+		if (!moveRight) {
+			toX -= delta * speed;
+			// respawn from right end if half of it went past window
+			if (toX + getWidth()/2 <= 0) {
+				toX = App.SCREEN_WIDTH + getWidth()/2;
+			}
+		}
+		// moving right
+		else {
+			toX += delta * speed;
+			// respawn from left end if half of it went past window
+			if (toX - getWidth()/2 >= App.SCREEN_WIDTH) {
+				toX = -getWidth()/2;
+			}
+		}
+	
+		setMove(toX, getY());
 	}
 }

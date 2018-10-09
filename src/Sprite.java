@@ -37,6 +37,8 @@ public abstract class Sprite {
 	private float x, y;
 	/** tags (properties) associated with sprite */
 	private ArrayList<String> tags;
+	/** for collision detection */
+	private BoundingBox bounds;
 	
 	
 	/** Constructor.
@@ -86,6 +88,8 @@ public abstract class Sprite {
 	public void setMove(float x, float y) {
 		this.x = x;
 		this.y = y;
+		this.bounds.setX(x);
+		this.bounds.setY(y);
 	}
 	
 	
@@ -156,15 +160,13 @@ public abstract class Sprite {
 	 * @return boolean Are they in collision?
 	 */
 	public boolean collidesWith(Sprite other) {
-		BoundingBox thisBox = new BoundingBox(this.image, this.x, this.y);
-		BoundingBox otherBox = new BoundingBox(other.getX(), other.getY(),
-										other.getWidth(), other.getHeight());
-		if (thisBox.intersects(otherBox)) {
+		if (this.bounds.intersects(other.bounds)) {
 				return true;
 		}
 
 		return false;
 	}
+	
 	
 	/** Check if sprite is on screen entirely.
 	 * @return boolean Sprite is on screen.
@@ -197,6 +199,7 @@ public abstract class Sprite {
 			this.x = x;
 			this.y = y;
 			this.tags = new ArrayList<>();
+			this.bounds = new BoundingBox(this.image, this.x, this.y);
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
