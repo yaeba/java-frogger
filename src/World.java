@@ -180,6 +180,16 @@ public class World {
 		sprites.add(extraLife);
 	}
 	
+	
+	public boolean hasExtraLife() {
+		for (Sprite sprite: this.sprites) {
+			if (sprite instanceof ExtraLife) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/** Handles destruction of extra life*/
 	private void checkExtraLife() {
 		// check if need to destroy any extra life

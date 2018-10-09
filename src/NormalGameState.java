@@ -42,7 +42,7 @@ public class NormalGameState extends State {
 	private float timePassed = 0;
 	
 	private float extraLifeStart;
-	private boolean setExtraLife = false;
+	private boolean toSetExtraLife = false;
 
 	
 	
@@ -54,9 +54,7 @@ public class NormalGameState extends State {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		
 		// create player and world
-		player = Player.getPlayer();
-		player.setMove(PLAYER_X, PLAYER_Y);
-		player.setRespawnPosition(PLAYER_X, PLAYER_Y);
+		player = setupPlayer(PLAYER_X, PLAYER_Y);
 		world = createLevel();
 		world.setExtraLife(true);
 	}
@@ -72,10 +70,8 @@ public class NormalGameState extends State {
 			throws SlickException {
 		
 		timePassed += delta * App.MILLISECOND;
-		if (timePassed > extraLifeStart && !setExtraLife) {
-			world.createExtraLife();
-			setExtraLife = true;
-		}
+		handleExtraLife();
+		
 		// update the world
         world.update(gc, delta);
         
@@ -140,11 +136,9 @@ public class NormalGameState extends State {
 			ArrayList<Sprite> sprites = readCsv(Integer.toString(level));
 			Goal[] goals = findGoals(sprites);
 			
-			int bound = EXTRALIFE_MAX - EXTRALIFE_MIN + 1;
-			this.extraLifeStart = new Random().nextInt(bound) + EXTRALIFE_MIN;
 			World world = new World(this.player, sprites, goals);
 			world.setExtraLife(true);
-			setExtraLife = false;
+			setExtraLifeStart();
 			timePassed = 0;
 			return new World(this.player, sprites, goals);
 		} catch (SlickException e) {
@@ -153,7 +147,21 @@ public class NormalGameState extends State {
 		return null;
 	}
 	
+	private void handleExtraLife() {
+		if (timePassed > extraLifeStart && toSetExtraLife) {
+			world.createExtraLife();
+			toSetExtraLife = false;
+		} else if (!toSetExtraLife && !world.hasExtraLife()) {
+			// extra life has disappeared
+			setExtraLifeStart();
+		}
+	}
 	
+	private void setExtraLifeStart() {
+		int bound = EXTRALIFE_MAX - EXTRALIFE_MIN + 1;
+		extraLifeStart = new Random().nextInt(bound) + EXTRALIFE_MIN + timePassed;
+		toSetExtraLife = true;
+	}
 	
 	/** identify goals (as horizontal spaces between tree sprites). */
 	private Goal[] findGoals(ArrayList<Sprite> sprites) throws SlickException {

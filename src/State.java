@@ -70,6 +70,18 @@ public abstract class State extends BasicGameState {
 		enterState(gc, sbg, new GameOverState());
 	}
 	
+	public float getTime() {
+		return time;
+	}
+	
+	public Player setupPlayer(float x, float y) {
+		// configure player from last game state
+		Player player = Player.getPlayer();
+		player.setMove(x, y);
+		player.setRespawnPosition(x, y);
+		return player;
+	}
+	
 	private void enterState(GameContainer gc, StateBasedGame sbg, GameState nextState) {
 		sbg.addState(nextState);
 		try {
@@ -81,15 +93,7 @@ public abstract class State extends BasicGameState {
 		((State)nextState).time = this.time;
 	}
 	
-	public void setPlayerLives(int lives) {
-		// meant to be overriden
-		return;
-	}
-
 	
-	public float getTime() {
-		return time;
-	}
 	
 	/** read in csv from "assets" 
 	 * @param level The level or string indicating which csv to read from.

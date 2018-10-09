@@ -33,9 +33,7 @@ public class EndlessGameState extends State {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) 
 			throws SlickException {
-		player = Player.getPlayer();
-		player.setMove(PLAYER_X, PLAYER_Y);
-		player.setRespawnPosition(PLAYER_X, PLAYER_Y);
+		player = setupPlayer(PLAYER_X, PLAYER_Y);
 		goal = Goal.createGoal(GOAL_X, GOAL_Y);
 		world = createRandomWorld();
 	}
