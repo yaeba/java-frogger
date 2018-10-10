@@ -88,7 +88,7 @@ public class NormalGameState extends State {
         		this.world.setExtraLife(true);
         	}
         } else if (world.isGameOver()) {
-        	enterGameOver(gc, sbg);
+        	enterGameOver(gc, sbg, ++this.level);
         }
         
         // update the time
@@ -119,14 +119,11 @@ public class NormalGameState extends State {
 		return ID;
 	}
 	
-	
-	/** Set lives of player (used for passing data across states.
-	 * @param lives Remaining lives of player.
-	 */
-	public void setPlayerLives(int lives) {
-		player.setLives(lives);
+	public int getLevel() {
+		return level;
 	}
 	
+
 	/** create a World that contains player, sprites and goals of current
 	 * level.
 	 */

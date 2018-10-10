@@ -51,7 +51,7 @@ public class MenuState extends State {
 		
 		// check if game is over
 		if (world.isGameOver()) {
-			enterGameOver(gc,sbg);
+			enterGameOver(gc, sbg, 0);
 		}
 		if (normalGoal.isFilled()) {
 			enterNormal(gc, sbg);

@@ -168,6 +168,10 @@ public abstract class Sprite {
 	}
 	
 	
+	public void killPlayer(Player player) {
+		player.die();
+	}
+	
 	/** Check if sprite is on screen entirely.
 	 * @return boolean Sprite is on screen.
 	 */

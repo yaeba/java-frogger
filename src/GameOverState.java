@@ -4,6 +4,7 @@
  */
 
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
@@ -13,6 +14,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 import java.awt.Font;
+import java.util.ArrayList;
 
 
 /**
@@ -70,10 +72,8 @@ public class GameOverState extends State {
 		
 		showing.draw(SAD_FROG[0], SAD_FROG[1], SAD_FROG[2]);
 		
-		String text = String.format("YOU HAVE WASTED %.2f SECONDS", getTime())
-					+ " OF YOUR LIFE\n";
-		text += COMMENT;
-		drawString(trueTypeFont, text, 0, 0);
+		drawText(0, 0);
+		drawScore(700, 200);
 	}
 
 	@Override
@@ -81,13 +81,43 @@ public class GameOverState extends State {
 		return ID;
 	}
 
-	private void drawString(TrueTypeFont font, String text, float x, float y) {
-		for (String line : text.split("\n")) {
-			font.drawString(x, y+=font.getHeight(), line);
-		}
-	}
-	
+
 	private void toggleImage() {
 		showing = showing.equals(sadFrog1) ? sadFrog2 : sadFrog1;
+	}
+
+	private void drawText(float x, float y) {
+		String text;
+		if (getTime() == 0) {
+			text = "YOU HAVE NOT EVEN PLAYED THIS GAME, COWARD!";
+		} else {
+			text = String.format("YOU HAVE WASTED %.2f SECONDS", getTime())
+					+ " OF YOUR LIFE\n";
+			text += COMMENT;
+		}
+		drawString(text, x, y, Color.white);
+	}
+	
+	private void drawScore(float x, float y) {
+		if (getTime() == 0) {
+			return;
+		}
+		String score = "";
+		ArrayList<Integer> history = getHistory();
+		if (history.contains(NormalGameState.ID)) {
+			score += "Proj2";
+		}
+		if (history.contains(EndlessGameState.ID)) {
+			score += score.isEmpty() ? "Endless" : "+Endless";
+		}
+		score += String.format(": level %d, %.1fs", getLastLevel(), getTime());
+		drawString("Score \n" + score, x, y, Color.cyan);
+	}
+	
+	private void drawString(String text, float x, float y, Color color) {
+		for (String line : text.split("\n")) {
+			trueTypeFont.drawString(x, y+=trueTypeFont.getHeight(), line,
+								color);
+		}
 	}
 }

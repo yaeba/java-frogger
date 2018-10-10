@@ -127,7 +127,7 @@ public class Player extends Sprite {
 	public void onCollision(Sprite other) {
 		// in contact with lethal sprite
 		if (other.hasTag(LETHAL)) {
-			onCollisionLethal();
+			onCollisionLethal(other);
 		}
 		
 		// in contact with solid sprite
@@ -195,9 +195,9 @@ public class Player extends Sprite {
 	}
 	
 	/** Collides with lethal sprite */
-	private void onCollisionLethal() {
+	private void onCollisionLethal(Sprite other) {
 		if (!hasTag(FLOATING)) {
-			die();
+			other.killPlayer(this);
 		}
 	}
 	
@@ -209,12 +209,7 @@ public class Player extends Sprite {
 		} else {
 			// pushed by solid object
 			MovingObject solid = (MovingObject) other;
-			float sep = solid.getWidth()/2 + this.getWidth()/2;
-			sep = solid.isMovingRight() ? sep : -1 * sep;
-			setMove(solid.getX()+sep, getY());
-			if (!onScreen()) {
-				die();
-			}
+			solid.pushPlayer(this);
 		}
 	}
 	

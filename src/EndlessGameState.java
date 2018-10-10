@@ -52,7 +52,7 @@ public class EndlessGameState extends State {
         	this.goal = Goal.createGoal(GOAL_X, GOAL_Y);
     		this.world = createRandomWorld();
         } else if (world.isGameOver()) {
-        	enterGameOver(gc, sbg);
+        	enterGameOver(gc, sbg, ++this.level);
         }
 	}
 	
@@ -73,9 +73,9 @@ public class EndlessGameState extends State {
 	public int getID() {
 		return ID;
 	}
-	
-	public void setPlayerLives(int lives) {
-		player.setLives(lives);
+
+	public int getLevel() {
+		return level;
 	}
 	
 	private World createRandomWorld() {

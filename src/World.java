@@ -208,7 +208,7 @@ public class World {
 	
 	/** Check if player has no move lives */
 	private void checkGameOver() {
-		if (player.getLives() == 0) {
+		if (player.getLives() < 0) {
 			this.gameOver = true;
 		}
 	}

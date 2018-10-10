@@ -87,6 +87,15 @@ public abstract class MovingObject extends Sprite {
 	}
 	
 	
+	public void pushPlayer(Player player) {
+		float sep = getWidth()/2 + getWidth()/2;
+		sep = isMovingRight() ? sep : -1 * sep;
+		player.setMove(getX()+sep, getY());
+		if (!player.onScreen()) {
+			killPlayer(player);
+		}
+	}
+	
 	private void move(int delta) {
 		// method that moves any moving object and respawn from either sides
 		float toX = getX();

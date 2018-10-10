@@ -31,7 +31,9 @@ public abstract class State extends BasicGameState {
 	public static final int CELL_MOVE_RIGHT = 3;
 	
 
-	private float time;
+	private float totalTime;
+	private int lastLevel;
+	private ArrayList<Integer> historyState = new ArrayList<>();
 	private Font font = new Font("Verdana", Font.BOLD, 20);
 	private TrueTypeFont trueTypeFont = new TrueTypeFont(font, true);
 	
@@ -40,7 +42,7 @@ public abstract class State extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) 
 			throws SlickException {
-		time += delta * App.MILLISECOND;
+		totalTime += delta * App.MILLISECOND;
 	}
 	
 	
@@ -53,7 +55,7 @@ public abstract class State extends BasicGameState {
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) 
 			throws SlickException {
-		trueTypeFont.drawString(0, 0, String.format("Time: %.1f", time), 
+		trueTypeFont.drawString(0, 0, String.format("Time: %.1f", totalTime), 
 							Color.green);
 	}
 	
@@ -66,12 +68,21 @@ public abstract class State extends BasicGameState {
 		enterState(gc, sbg, new EndlessGameState());
 	}
 	
-	public void enterGameOver(GameContainer gc, StateBasedGame sbg) {
+	public void enterGameOver(GameContainer gc, StateBasedGame sbg, int level) {
 		enterState(gc, sbg, new GameOverState());
+		((State)sbg.getState(GameOverState.ID)).lastLevel = level;
 	}
 	
 	public float getTime() {
-		return time;
+		return totalTime;
+	}
+	
+	public int getLastLevel() {
+		return lastLevel;
+	}
+	
+	public ArrayList<Integer> getHistory() {
+		return historyState;
 	}
 	
 	public Player setupPlayer(float x, float y) {
@@ -83,6 +94,7 @@ public abstract class State extends BasicGameState {
 	}
 	
 	private void enterState(GameContainer gc, StateBasedGame sbg, GameState nextState) {
+		historyState.add(sbg.getCurrentStateID());
 		sbg.addState(nextState);
 		try {
 			nextState.init(gc, sbg);
@@ -90,9 +102,9 @@ public abstract class State extends BasicGameState {
 			e.printStackTrace();
 		};
 		sbg.enterState(nextState.getID(), new EmptyTransition(), new VerticalSplitTransition());
-		((State)nextState).time = this.time;
+		((State)nextState).totalTime = this.totalTime;
+		((State)nextState).historyState.addAll(this.historyState);
 	}
-	
 	
 	
 	/** read in csv from "assets" 
