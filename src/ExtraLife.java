@@ -80,6 +80,7 @@ public class ExtraLife extends Sprite {
 		}
 		
 		move();
+		
 	}
 	
 	
@@ -126,4 +127,5 @@ public class ExtraLife extends Sprite {
 
 		this.sep = getX() - onLog.getX();
 	}
+
 }

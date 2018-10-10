@@ -41,8 +41,6 @@ public class World {
 	private boolean levelCompleted = false;
 	/** Game status */
 	private boolean gameOver = false;
-	/** Presence of extra life in world */
-	private boolean setExtraLife = false;
 	
 	
 	/** Constructor.
@@ -70,7 +68,7 @@ public class World {
 		throws SlickException {
 		
 		
-		if (setExtraLife) {
+		if (hasExtraLife()) {
 			// handle the removal of extra life
 			checkExtraLife();
 		}
@@ -140,13 +138,13 @@ public class World {
 		renderLives(g);
 	}
 
-	/** Set if world should have extra life.
-     * @param bool Boolean.
-     */
-	public void setExtraLife(boolean bool) {
-		this.setExtraLife = bool;
-	}
-	
+//	/** Set if world should have extra life.
+//     * @param bool Boolean.
+//     */
+//	public void setExtraLife(boolean bool) {
+//		this.setExtraLife = bool;
+//	}
+//	
 	/** Return level status.
 	 * @return boolean Is level completed?
      */

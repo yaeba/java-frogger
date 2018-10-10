@@ -188,10 +188,14 @@ public class Player extends Sprite {
 		}
 		// make sure it is not moving out of window
 		if (canMove(toX, toY)) {
-			prevX = getX();
-			prevY = getY();
 			setMove(toX, toY);
 		}
+	}
+	
+	public void setMove(float x, float y) {
+		prevX = getX();
+		prevY = getY();
+		super.setMove(x, y);
 	}
 	
 	/** Collides with lethal sprite */

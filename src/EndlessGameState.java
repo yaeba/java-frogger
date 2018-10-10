@@ -22,20 +22,27 @@ public class EndlessGameState extends State {
 	public static final float PLAYER_Y = 720;
 	/** Goal x */
 	public static final float GOAL_X = 504;
-	/** GOal y */
+	/** Goal y */
 	public static final float GOAL_Y = 48;
+	/** Level of extra lives */
+	public static final int BONUS_LEVEL = 3;
 	
 	private World world;
 	private Player player;
 	private Goal goal;
 	private int level = 0;
+	private int bonusLevel = BONUS_LEVEL;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame sbg) 
 			throws SlickException {
 		player = setupPlayer(PLAYER_X, PLAYER_Y);
 		goal = Goal.createGoal(GOAL_X, GOAL_Y);
-		world = createRandomWorld();
+		if (level == bonusLevel) {
+			world = createBonusWorld();
+		} else {
+			world = createRandomWorld();
+		}
 	}
 
 	
@@ -49,8 +56,7 @@ public class EndlessGameState extends State {
         if (world.isLevelCompleted()) {
         	this.level++;
         	System.out.println(level);
-        	this.goal = Goal.createGoal(GOAL_X, GOAL_Y);
-    		this.world = createRandomWorld();
+        	init(gc, sbg);
         } else if (world.isGameOver()) {
         	enterGameOver(gc, sbg, ++this.level);
         }
@@ -90,11 +96,12 @@ public class EndlessGameState extends State {
 	}
 
 	private ArrayList<Sprite> createSprites() {
-		ArrayList<Sprite> sprites = readCsv("endless");
+		ArrayList<Sprite> sprites = new ArrayList<>();
 		
 		for (float y=WORLD_Y[0]; y<=WORLD_Y[1]; y+=App.TILE_SIZE) {
 			sprites.addAll(createRandomLane(y));
 		}
+		sprites.addAll(readCsv("endless"));
 		return sprites;
 	}
 	
@@ -108,4 +115,27 @@ public class EndlessGameState extends State {
 		return randomLane.getSprites();
 	}
 	
+	
+	private World createBonusWorld() {
+		ArrayList<Sprite> sprites = new ArrayList<>();
+		for (float y=WORLD_Y[0]; y<=WORLD_Y[1]; y+=App.TILE_SIZE) {
+			for (float x=0; x<=App.SCREEN_WIDTH; x+=App.TILE_SIZE) {
+				sprites.add(Tile.createWaterTile(x, y));
+			}
+		}
+		sprites.addAll(readCsv("endless"));
+		sprites.addAll(readCsv("bonus"));
+		try {
+			world = new World(player, sprites, new Goal[] {goal});
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		level--;
+		bonusLevel *= bonusLevel;
+		for (int i=0; i<15; i++) {
+			world.createExtraLife();
+		}
+		return world;
+		
+	}
 }

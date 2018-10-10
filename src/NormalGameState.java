@@ -56,7 +56,6 @@ public class NormalGameState extends State {
 		// create player and world
 		player = setupPlayer(PLAYER_X, PLAYER_Y);
 		world = createLevel();
-		world.setExtraLife(true);
 	}
 
 	
@@ -84,8 +83,7 @@ public class NormalGameState extends State {
         	}
         	else {
         		// create a World of new level
-        		this.world = createLevel();
-        		this.world.setExtraLife(true);
+        		init(gc, sbg);
         	}
         } else if (world.isGameOver()) {
         	enterGameOver(gc, sbg, ++this.level);
@@ -133,10 +131,7 @@ public class NormalGameState extends State {
 			ArrayList<Sprite> sprites = readCsv(Integer.toString(level));
 			Goal[] goals = findGoals(sprites);
 			
-			World world = new World(this.player, sprites, goals);
-			world.setExtraLife(true);
 			setExtraLifeStart();
-			timePassed = 0;
 			return new World(this.player, sprites, goals);
 		} catch (SlickException e) {
 			e.printStackTrace();
