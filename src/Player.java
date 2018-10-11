@@ -18,6 +18,8 @@ public class Player extends Sprite {
 	public static final float RESPAWN_X = 512;
 	/** player's default respawn y position */
 	public static final float RESPAWN_Y = 720;
+	/** player initial lives */
+	public static final int PLAYER_LIVES = 3;
 	
 	
 	/** static variable single instance of Player */
@@ -32,9 +34,12 @@ public class Player extends Sprite {
 	/** previous legal position of player */
 	private float prevX, prevY;
 	
-	/** position to return to after dying */
+	/** x position to return to after dying */
 	private float respawnX = RESPAWN_X;
+	
+	/** y position to return to after dying */
 	private float respawnY = RESPAWN_Y;
+
 	
 	/** Static method to create a player.
 	 * @param x X position of player.
@@ -42,36 +47,21 @@ public class Player extends Sprite {
 	 * @param lives Number of lives player has.
 	 * @return Player Player created.
 	 */
-	public static Player createPlayer(float x, float y, int lives) {
+	public static Player createPlayer(float x, float y) {
 		if (player == null) {
-			player = new Player(PLAYER_PATH, x, y, lives);
+			player = new Player(PLAYER_PATH, x, y, PLAYER_LIVES);
 		}
 		return player;
 	}
 	
-	
+	/** Get the singleton player.
+	 * @return Player The singleton player
+	 */
 	public static Player getPlayer() {
 		return player;
 	}
 	
-	/** Constructor.
-	 * @param imgPath Path to sprite's image.
-	 * @param x Starting x position of sprite.
-	 * @param y Starting y position of sprite.
-	 * @param lives Number of lives player has.
-	 */
-	private Player(String imgPath, float x, float y, int lives) {
-		super(imgPath, x, y);
-		this.lives = lives;
-		this.prevX = x;
-		this.prevY = y;
-	}
-	
-	
-	/** Update method of player.
-	 * @param gc The Slick game container.
-	 * @param delta Time passed since last frame (milliseconds).
-	 */
+
 	@Override
 	public void update(GameContainer gc, int delta) {
 		// update position of player
@@ -85,6 +75,12 @@ public class Player extends Sprite {
 		moveByInput(gc.getInput());
 	}
 	
+	@Override
+	public void setMove(float x, float y) {
+		prevX = getX();
+		prevY = getY();
+		super.setMove(x, y);
+	}
 	
 	/** Check if player still on screen after moving.
 	 * @param toX Destination x.
@@ -110,13 +106,13 @@ public class Player extends Sprite {
 		this.lives = lives;
 	}
 	
-	/** Method to kill player and reset to starting position. */
+	/** Die and reset to starting position. */
 	public void die() {
 		respawn();
 		this.lives--;
 	}
 	
-	/** Method to set player at respawn position */
+	/** Spawn player */
 	public void respawn() {
 		setMove(respawnX, respawnY);
 	}
@@ -139,7 +135,7 @@ public class Player extends Sprite {
 		if (other.hasTag(FLOATING)) {
 			onCollisionFloating(other);
 		}
-		
+
 		// reached a goal
 		if (other instanceof Goal) {
 			onCollisionGoal(other);
@@ -152,9 +148,9 @@ public class Player extends Sprite {
 	}
 	
 	
-	/** Set restart position after dying 
-	 * @param x Respawn x position
-	 * @param y Respawn y position
+	/** Set restart position after dying (required by different states.
+	 * @param x Respawn x position.
+	 * @param y Respawn y position.
 	 */
 	public void setRespawnPosition(float x, float y) {
 		this.respawnX = x;
@@ -162,8 +158,9 @@ public class Player extends Sprite {
 	}
 	
 	
-	/** Update player position with object it is riding. */
+	
 	private void moveByRiding(int delta) {
+		// update player position with object it is riding.
 		float sep = rideOn.getSpeed() * delta;
 		sep = rideOn.isMovingRight() ? sep : -1 * sep;
 		float toX = getX() + sep;
@@ -173,8 +170,8 @@ public class Player extends Sprite {
 	}
 	
 	
-	/** Update player position with input received. */
 	private void moveByInput(Input input) {
+		// update player position with input received.
 		float toX = getX(), toY = getY();
 		float step = getWidth();
 		if (input.isKeyPressed(Input.KEY_UP)) {
@@ -192,21 +189,16 @@ public class Player extends Sprite {
 		}
 	}
 	
-	public void setMove(float x, float y) {
-		prevX = getX();
-		prevY = getY();
-		super.setMove(x, y);
-	}
-	
-	/** Collides with lethal sprite */
+
 	private void onCollisionLethal(Sprite other) {
+		// collide with lethal sprite
 		if (!hasTag(FLOATING)) {
 			other.killPlayer(this);
 		}
 	}
 	
-	/** Collides with solid sprite */
 	private void onCollisionSolid(Sprite other) {
+		// collide with solid sprite
 		if (prevX != getX() || prevY != getY()) {
 			// prevent moving into solid object
 			reset_pos();
@@ -217,16 +209,16 @@ public class Player extends Sprite {
 		}
 	}
 	
-	/** Collides with floating sprite */
 	private void onCollisionFloating(Sprite other) {
+		// collide with floating sprite
 		this.rideOn = (WaterTransport) other;
 		if (!hasTag(FLOATING)) {
 			addTag(FLOATING);
 		}
 	}
 	
-	/** Collides with goal */
 	private void onCollisionGoal(Sprite other) {
+		// collide with a goal
 		Goal goal = (Goal) other;
 		if (goal.isFilled()) {
 			// already filled
@@ -235,17 +227,24 @@ public class Player extends Sprite {
 			goal.fillGoal(this);
 		}
 	}
+
 	
-	/** Collides with extra life */
 	private void onCollisionExtraLife(Sprite other) {
+		// add a live
 		ExtraLife extraLife = (ExtraLife) other;
 		extraLife.activateEffect(this);
 	}
 	
-	/** Reset to previous legal position (prevent moving into solid object) */
 	private void reset_pos() {
+		// return to previous legal position
 		setMove(prevX, prevY);
 	}
 	
-	
+
+	private Player(String imgPath, float x, float y, int lives) {
+		super(imgPath, x, y);
+		this.lives = lives;
+		this.prevX = x;
+		this.prevY = y;
+	}
 }

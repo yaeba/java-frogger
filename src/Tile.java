@@ -3,19 +3,19 @@
  * by Xuanken Tay, University of Melbourne
  */
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
 
 /**
  * Represent a single Tile. Inherits from Sprite.
  */
 public class Tile extends Sprite {
 	/** image path of grass tile */
-	private static final String GRASS_PATH = "assets/grass.png";
+	public static final String GRASS_PATH = "assets/grass.png";
 	/** image path of water tile */
-	private static final String WATER_PATH = "assets/water.png";
+	public static final String WATER_PATH = "assets/water.png";
 	/** image path of tree tile */
-	private static final String TREE_PATH = "assets/tree.png";
+	public static final String TREE_PATH = "assets/tree.png";
+	
+	
 	
 	
 	/** Static method to create a grass tile.
@@ -47,27 +47,10 @@ public class Tile extends Sprite {
 		return new Tile(TREE_PATH, x, y, new String[] {SOLID});
 	}
 	
-	
-	/** Constructor.
-	 * @param imgPath Path to sprite's image.
-	 * @param x Starting x position of sprite.
-	 * @param y Starting y position of sprite.
-	 * @param tags Tags of sprite.
-	 */
-	public Tile(String imgPath, float x, float y, String[] tags) {
+	private Tile(String imgPath, float x, float y, String[] tags) {
 		super(imgPath, x, y, tags);
 	}
 
 	
-	/** Update method.
-	 * @param gc The Slick game container.
-	 * @param delta Time passed since last frame (milliseconds).
-	 */
-	@Override
-	public void update(GameContainer gc, int delta) 
-			throws SlickException {
-		// tile has nothing to do with updating (at this stage)
-		return;
-	}	
-	
+
 }

@@ -18,7 +18,7 @@ import utilities.BoundingBox;
  * Contains general methods such as getters, setters and handles rendering.
  */
 public abstract class Sprite {
-	/** tag indicating sprite is lethal */
+	/** tag indicating sprite can kill player */
 	public static final String LETHAL = "lethal";
 	/** tag indicating sprite is solid */
 	public static final String SOLID = "solid";
@@ -28,15 +28,20 @@ public abstract class Sprite {
 	public static final String REVERSIBLE = "reversible";
 	/** tag indicating sprite can dive */
 	public static final String DIVEABLE = "diveable";
-	/** tag indicating (some) sprites must be flipped horizontally */
+	/** tag indicating (some) sprites can be flipped horizontally */
 	public static final String FLIPPABLE = "flippable";
+
+	
 	
 	/** image of sprite */
 	private Image image;
+	
 	/** x, y position of sprite */
 	private float x, y;
+	
 	/** tags (properties) associated with sprite */
 	private ArrayList<String> tags;
+	
 	/** for collision detection */
 	private BoundingBox bounds;
 	
@@ -81,7 +86,7 @@ public abstract class Sprite {
 	}
 		
 	
-	/** Setter for position of sprite.
+	/** Setter for position of sprite, and update bounds.
 	 * @param x Destination x position.
 	 * @param y Destination y position.
 	 */
@@ -122,7 +127,7 @@ public abstract class Sprite {
 	}
 	
 	/** Getter for image height of sprite.
-	 * @return float Image heigth.
+	 * @return float Image height.
 	 */
 	public float getHeight() {
 		return this.image.getHeight();
@@ -130,7 +135,7 @@ public abstract class Sprite {
 	
 	/** Check if sprite has certain tag.
 	 * @param tag Tag of interest.
-	 * @return boolean Has tag? 
+	 * @return boolean Presence of certain tag.
 	 */
 	public boolean hasTag(String tag) {
 		for (String s : this.tags) {
@@ -167,7 +172,9 @@ public abstract class Sprite {
 		return false;
 	}
 	
-	
+	/** Some sprite can kill player.
+	 * @param player Reference to player.
+	 */
 	public void killPlayer(Player player) {
 		player.die();
 	}
@@ -192,12 +199,10 @@ public abstract class Sprite {
 				&& (y + width/2 <= App.SCREEN_HEIGHT);
 	}
 	
-	/** Create sprite with no tags.
-	 * @param imgPath Path to sprite's image.
-	 * @param x Starting x position of sprite.
-	 * @param y Starting y position of sprite.
-	 */
+
+	
 	private void createSprite(String imgPath, float x, float y) {
+		// create sprites with empty tags
 		try {
 			this.image = new Image(imgPath);
 			this.x = x;
@@ -209,11 +214,8 @@ public abstract class Sprite {
 		}
 	}
 	
-	/** Create array list of tags.
-	 * @param tags Array of tags.
-	 * @return ArrayList<String> Array list of tags.
-	 */
 	private ArrayList<String> createTags(String[] tags){
+		// convert string array of tags to array list of tags
 		return new ArrayList<>(Arrays.asList(tags));
 	}
 }

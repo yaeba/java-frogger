@@ -17,6 +17,7 @@ public class Goal extends Sprite {
 	/** goal status */
 	private boolean filled = false;
 	
+	
 	/** Static method to create a goal.
 	 * @param x X position of goal.
 	 * @param y Y position of goal.
@@ -26,22 +27,10 @@ public class Goal extends Sprite {
 		return new Goal(PLAYER_PATH, x, y);
 	}
 	
-	
-	/** Constructor.
-	 * @param imgPath Path to sprite's image.
-	 * @param x Starting x position of sprite.
-	 * @param y Starting y position of sprite.
-	 */
-	public Goal(String imgPath, float x, float y){
-		super(imgPath, x, y);
-	}
 
-	
-	/** Render the sprite from top left corner.
-     * @param g The Slick graphics object, used for drawing.
-     */
 	@Override
 	public void render(Graphics g) throws SlickException {
+		// only render filled goal
 		if (filled) {
 			super.render(g);
 		}
@@ -60,5 +49,9 @@ public class Goal extends Sprite {
 	 */
 	public boolean isFilled() {
 		return filled;
+	}
+	
+	private Goal(String imgPath, float x, float y){
+		super(imgPath, x, y);
 	}
 }

@@ -3,7 +3,6 @@
  * by Xuanken Tay, University of Melbourne
  */
 
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Graphics;
@@ -50,13 +49,9 @@ public class World {
 	 */
 	public World(Player player, ArrayList<Sprite> sprites, Goal[] goals) 
 			throws SlickException {
-		// initialise player, sprites, goals and time extra life starts
-		
 		this.player = player;
 		this.sprites = sprites;
 		this.goals = goals;
-
-		
 	}
 	
 	
@@ -75,8 +70,8 @@ public class World {
 		
 		// cheat code to fill goals (remove afterwards)
 		if (gc.getInput().isKeyPressed(Input.KEY_ENTER)) {
-			for (Goal goal : this.goals) {
-				if(!goal.isFilled()) {
+			for (Goal goal : goals) {
+				if (!goal.isFilled()) {
 					goal.fillGoal(player);
 					break;
 				}
@@ -136,15 +131,9 @@ public class World {
 		
 		// draw lives
 		renderLives(g);
+		
 	}
 
-//	/** Set if world should have extra life.
-//     * @param bool Boolean.
-//     */
-//	public void setExtraLife(boolean bool) {
-//		this.setExtraLife = bool;
-//	}
-//	
 	/** Return level status.
 	 * @return boolean Is level completed?
      */
@@ -179,6 +168,9 @@ public class World {
 	}
 	
 	
+	/** Check if world currently has extra life or not.
+	 * @return boolean Presence of extra life.
+	 */
 	public boolean hasExtraLife() {
 		for (Sprite sprite: this.sprites) {
 			if (sprite instanceof ExtraLife) {
@@ -188,14 +180,16 @@ public class World {
 		return false;
 	}
 	
-	/** Handles destruction of extra life*/
+
 	private void checkExtraLife() {
-		// check if need to destroy any extra life
-		sprites.removeIf(s -> (s instanceof ExtraLife && ((ExtraLife)s).isDestroyed()));
+		// check if need to destroy any destroyed extra life
+		sprites.removeIf(s -> (s instanceof ExtraLife && 
+								((ExtraLife)s).isDestroyed()));
 	}
 	
-	/** Check if all goals have been filled */
+
 	private void checkLevelCompleted() {
+		// check if all goals have been filled
 		for (Goal goal: this.goals) {
 			if (!goal.isFilled()) {
 				return;
@@ -204,15 +198,17 @@ public class World {
 		this.levelCompleted = true;
 	}
 	
-	/** Check if player has no move lives */
+
 	private void checkGameOver() {
+		// check if player has no move lives
 		if (player.getLives() < 0) {
 			this.gameOver = true;
 		}
 	}
 	
-	/** Check if player is floating */
+	
 	private void checkFloating() {
+		// update player's floating status
 		for (Sprite sprite : this.sprites) {
 			if (sprite.hasTag(Sprite.FLOATING) && player.collidesWith(sprite)) {
 				// player is riding something
@@ -228,14 +224,16 @@ public class World {
 		}
 	}
 	
-	/** Render lives on screen */
+
 	private void renderLives(Graphics g) {
+		// render lives on screen 
 		for (int i=0; i<player.getLives(); i++) {
-			float lives_x = LIVES_X + i * LIVES_SEP;
+			float livesX = LIVES_X + i * LIVES_SEP;
 			
-			float lives_y = LIVES_Y;
-			g.drawImage(lives, lives_x-lives.getWidth()/2, 
-						lives_y-lives.getHeight()/2);
+			float livesY = LIVES_Y;
+			g.drawImage(lives, livesX-lives.getWidth()/2, 
+						livesY-lives.getHeight()/2);
 		}
 	}
+
 }

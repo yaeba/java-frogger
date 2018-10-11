@@ -4,6 +4,7 @@
  */
 
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -12,12 +13,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Normal Game State for the game (Proj 2).
+ * Normal game mode for the game (Proj 2).
  * Reads level information from csv, handles initialisation, 
  * input and rendering.
  */
 public class NormalGameState extends State {
-	/** The ID given to this state */
+	/** ID given to this state */
 	public static final int ID = 1;
 	/** player starting x position */
 	public static final float PLAYER_X = 512;
@@ -30,48 +31,43 @@ public class NormalGameState extends State {
 	/** upper bound seconds extralife appears */
 	public static final int EXTRALIFE_MAX = 35;
 	
+	
 	/** The game world */
 	private World world;
 	
-	/** The player */
+	/** Singleton player */
 	private Player player;
 	
 	/** Current level */
 	private int level = 0;
 	
-	private float timePassed = 0;
-	
+	/** Time extralife appears */
 	private float extraLifeStart;
+	
+	/** Status to set extralife */
 	private boolean toSetExtraLife = false;
 
 	
 	
-	/** Initialise the game.
-	 * @param gc The Slick game container object.
-	 * @param sbg The game holding this state.
-	 */
 	@Override
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame sbg) 
+			throws SlickException {
 		
-		// create player and world
+		// get singleton player
 		player = setupPlayer(PLAYER_X, PLAYER_Y);
 		world = createLevel();
 	}
 
 	
-	/** Update the game for a frame.
-     * @param gc The Slick game container object.
-	 * @param sbg The game holding this state.
-     * @param delta Time passed since last frame (milliseconds).
-     */
+
 	@Override
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) 
 			throws SlickException {
 		
-		timePassed += delta * App.MILLISECOND;
+		// handle creation and destruction of extra life
 		handleExtraLife();
 		
-		// update the world
+		// update the world and all sprites
         world.update(gc, delta);
         
 
@@ -94,38 +90,37 @@ public class NormalGameState extends State {
 	}
 	
 	
-	/** Render the entire screen, so it reflects the current game state.
-     * @param gc The Slick game container object.
-	 * @param sbg The game holding this state.
-     * @param g The Slick graphics object, used for drawing.
-     */
+
 	@Override
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) 
 			throws SlickException {
+		// render world and level string
 		world.render(g);
-		
+		renderString("Level: "+(level+1)+" (Proj2)", LEVEL_X, LEVEL_Y, 
+				Color.orange);
 		// draw time
 		super.render(gc, sbg, g);
 	}
 
 
-	/** Get the ID of this state.
-	 * @return int The game unique ID for this state.
-	 */
+
 	@Override
 	public int getID() {
 		return ID;
 	}
 	
+	
+	/** Get current level.
+	 * @return int Current level.
+	 */
 	public int getLevel() {
 		return level;
 	}
 	
 
-	/** create a World that contains player, sprites and goals of current
-	 * level.
-	 */
+
 	private World createLevel() {
+		// create a world containing player, all sprites and goals
 		try {
 			// read in sprites from csv and find goals
 			ArrayList<Sprite> sprites = readCsv(Integer.toString(level));
@@ -139,8 +134,10 @@ public class NormalGameState extends State {
 		return null;
 	}
 	
+	
 	private void handleExtraLife() {
-		if (timePassed > extraLifeStart && toSetExtraLife) {
+		if (getTime() > extraLifeStart && toSetExtraLife) {
+			// time to create an extralife
 			world.createExtraLife();
 			toSetExtraLife = false;
 		} else if (!toSetExtraLife && !world.hasExtraLife()) {
@@ -149,14 +146,17 @@ public class NormalGameState extends State {
 		}
 	}
 	
+	
 	private void setExtraLifeStart() {
+		// set the time for extralife to appear
 		int bound = EXTRALIFE_MAX - EXTRALIFE_MIN + 1;
-		extraLifeStart = new Random().nextInt(bound) + EXTRALIFE_MIN + timePassed;
+		extraLifeStart = new Random().nextInt(bound)+EXTRALIFE_MIN+getTime();
 		toSetExtraLife = true;
 	}
 	
-	/** identify goals (as horizontal spaces between tree sprites). */
+
 	private Goal[] findGoals(ArrayList<Sprite> sprites) throws SlickException {
+		// identify goals (as horizontal spaces between tree sprites)
 		ArrayList<Goal> goals = new ArrayList<Goal>();
 		float prevX, prevY;
 		prevX = prevY = 0;

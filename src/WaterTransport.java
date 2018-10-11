@@ -74,42 +74,22 @@ public class WaterTransport extends MovingObject {
 					new String[] {FLOATING, DIVEABLE, FLIPPABLE});
 	}
 	
-	
-	/** Constructor.
-	 * @param imgPath Path to sprite's image.
-	 * @param x Starting x position of sprite.
-	 * @param y Starting y position of sprite.
-	 * @param speed Speed of sprite.
-	 * @param moveRight Moving direction sprite.
-	 * @param tags Tags associated with sprite.
-	 */
-	public WaterTransport(String imgPath, float x, float y, float speed, 
-			boolean moveRight, String[] tags) {
-		super(imgPath, x, y, speed, moveRight, tags);
-	}
 
-
-	
-	/** Update method of water transport.
-	 * @param gc The Slick game container.
-	 * @param delta Time passed since last frame (milliseconds).
-	 */
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
-		// add on to how sprite moves
+		// some sprite (turtle) can dive
 		
 		if (hasTag(DIVEABLE)) {
 			handleDiving(delta);
 		}
 		
+		// move as usual
 		super.update(gc, delta);
 		
 	}
 	
 	
-	/** Render the sprite from top left corner.
-     * @param g The Slick graphics object, used for drawing.
-     */
+
 	@Override
 	public void render(Graphics g) throws SlickException {
 		// do not render diving sprite.
@@ -119,7 +99,13 @@ public class WaterTransport extends MovingObject {
 	}
 	
 	
+	private WaterTransport(String imgPath, float x, float y, float speed, 
+			boolean moveRight, String[] tags) {
+		super(imgPath, x, y, speed, moveRight, tags);
+	}
+	
 	private void handleDiving(int delta) {
+		// check if sprite (turtle) should be diving or reappearing
 		timeLastDived += delta * App.MILLISECOND;
 		
 		if ((isDiving && timeLastDived >= DIVE_FOR) ||
@@ -131,8 +117,8 @@ public class WaterTransport extends MovingObject {
 	}
 	
 	
-	/** Method that alternate diving state of sprite. */
 	private void updateFloatingTag() {
+		// alternative diving state of sprite
 		if (hasTag(FLOATING)) {
 			removeTag(FLOATING);
 		} else {

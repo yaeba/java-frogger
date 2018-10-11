@@ -10,7 +10,7 @@ import org.newdawn.slick.SlickException;
  * Represent an extra life object that inherits from Sprite.
  */
 public class ExtraLife extends Sprite {
-	/** image path of extra life object */
+	/** Image path of extra life object */
 	private static final String EXTRALIFE_PATH = "assets/extralife.png";
 	/** Time interval between moving */
 	private static final int MOVE_PERIOD = 2;
@@ -27,7 +27,7 @@ public class ExtraLife extends Sprite {
 	/** Time since created */
 	private float timeCreated = 0;
 	
-	/** Moving right? */
+	/** Indicate if it should step right */
 	private boolean stepRight = true;
 	
 	/** Variable to record separation from log */
@@ -49,23 +49,6 @@ public class ExtraLife extends Sprite {
 	}
 	
 	
-	/** Constructor.
-	 * @param imgPath Image path.
-	 * @param x Starting x position.
-	 * @param y Starting y position.
-	 * @param log The log it is created on.
-	 */
-	public ExtraLife(String imgPath, float x, float y,
-			WaterTransport log) {
-		super(imgPath, x, y);
-		this.onLog = log;
-	}
-	
-	
-	/** Update method of extra life.
-	 * @param gc The Slick game container.
-	 * @param delta Time passed since last frame (milliseconds).
-	 */
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		// unlike sprite, extra life can move
@@ -99,8 +82,16 @@ public class ExtraLife extends Sprite {
 		return this.destroyed;
 	}
 	
-	/** Set status to destroyed */
+	
+	private ExtraLife(String imgPath, float x, float y,
+			WaterTransport log) {
+		super(imgPath, x, y);
+		this.onLog = log;
+	}
+	
+	
 	private void destroy() {
+		// set status to destroyed
 		this.destroyed = true;
 	}
 	

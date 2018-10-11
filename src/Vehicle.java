@@ -72,32 +72,14 @@ public class Vehicle extends MovingObject {
 		return new Vehicle(BULLDOZER_PATH, x, y, BULLDOZER_SPEED, moveRight, 
 						new String[] {SOLID, FLIPPABLE});
 	}
-	
-	
-	/** Constructor.
-	 * @param imgPath Path to sprite's image.
-	 * @param x Starting x position of sprite.
-	 * @param y Starting y position of sprite.
-	 * @param speed Speed of sprite.
-	 * @param moveRight Moving direction sprite.
-	 * @param tags Tags associated with sprite.
-	 */
-	public Vehicle(String imgPath, float x, float y, float speed,
-			boolean moveRight, String[] tags) {
-		super(imgPath, x, y, speed, moveRight, tags);
-	}
-	
-	
-	/** Update method of vehicle.
-	 * @param gc The Slick game container.
-	 * @param delta Time passed since last frame (milliseconds).
-	 */
+
+
 	@Override
 	public void update(GameContainer gc, int delta) throws SlickException {
 		// add on to how sprite moves
 		
 		if (hasTag(REVERSIBLE)) {
-			// reverse direction if necessary
+			// reverse direction if necessary (only for bike(
 			handleReverse();
 		}
 		
@@ -105,6 +87,12 @@ public class Vehicle extends MovingObject {
 		super.update(gc, delta);
 		
 	}
+	
+	private Vehicle(String imgPath, float x, float y, float speed,
+			boolean moveRight, String[] tags) {
+		super(imgPath, x, y, speed, moveRight, tags);
+	}
+	
 	
 	private void handleReverse() {
 		// method that handles reversible moving object

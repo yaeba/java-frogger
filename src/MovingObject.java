@@ -15,6 +15,7 @@ import org.newdawn.slick.SlickException;
 public abstract class MovingObject extends Sprite {
 	/** Moving speed */
 	private float speed;
+	
 	/** Moving direction */
 	private boolean moveRight;
 	
@@ -35,10 +36,6 @@ public abstract class MovingObject extends Sprite {
 	}
 	
 	
-	/** Update method of moving object.
-	 * @param gc The Slick game container.
-	 * @param delta Time passed since last frame (milliseconds).
-	 */
 	@Override
 	public void update(GameContainer gc, int delta) 
 			throws SlickException {
@@ -47,15 +44,12 @@ public abstract class MovingObject extends Sprite {
 	}
 	
 	
-	/** Render the sprite from top left corner.
-     * @param g The Slick graphics object, used for drawing.
-     */
 	@Override
 	public void render(Graphics g) throws SlickException {
+		// some sprites can be flipped according to moving direction
 		if (!isMovingRight() && hasTag(FLIPPABLE)) {
 			
 			// render horizontally flipped image
-
 			g.drawImage(getImage().getFlippedCopy(true, false), 
 						getX()-getWidth()/2, getY()-getHeight()/2);
 		
@@ -86,15 +80,18 @@ public abstract class MovingObject extends Sprite {
 		this.moveRight = !this.moveRight;
 	}
 	
-	
+	/** Solid sprite pushes and updates position of player.
+	 * @param player Reference to player.
+	 */
 	public void pushPlayer(Player player) {
 		float sep = getWidth()/2 + getWidth()/2;
 		sep = isMovingRight() ? sep : -1 * sep;
-		player.setMove(getX()+sep, getY());
+		player.setMove(getX()+sep, player.getY());
 		if (!player.onScreen()) {
 			killPlayer(player);
 		}
 	}
+	
 	
 	private void move(int delta) {
 		// method that moves any moving object and respawn from either sides
